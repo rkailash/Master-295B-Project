@@ -18,8 +18,8 @@ class App extends Component {
           <Switch>
             <Route exact path="/" render={() => <Login />} />
             <Route path="/Register" component={Register} />
-            <Route path="/Search" component={Search} />
-            <Route path="/Home" component={Home} />
+            <Route path="/Search" render={props => <Search {...props} />} />
+            <Route path="/Home" render={props => <Home {...props} />} />
             <Route path="/Listing" render={props => <Listing {...props} />} />
           </Switch>
         </BrowserRouter>
