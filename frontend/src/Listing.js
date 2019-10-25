@@ -26,7 +26,7 @@ class Listing extends Component {
         {this.props.location.state.referrer.items.map(item => (
           <li key={item}>
             <div>
-              <Property Name={item.Name} Street={item.Street} />
+              <Property Name={item.address}  Zip={item.zip_code} />
             </div>
           </li>
         ))}

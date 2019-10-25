@@ -2,6 +2,14 @@ const express = require("express");
 const app = express();
 const cookieParser = require("cookie-parser");
 app.use(cookieParser());
+const Pool = require("pg").Pool;
+const pool = new Pool({
+  user: "",
+  host: "localhost",
+  database: "mastertnf",
+  password: "",
+  port: 5432
+});
 
 const mongoose = require("mongoose");
 const mongoDB = "mongodb://kailashr:passw0rd1@ds237855.mlab.com:37855/homeaway";
@@ -62,21 +70,38 @@ app.post("/Login", (req, res) => {
       }
     });
 });
+// Query
 
-app.get("/PropertyList", (req, res) => {
-  property = [
-    { Name: "Property A", Street: "3rd Street" },
-    { Name: "Property B", Street: "South Street" },
-    { Name: "Property C", Street: "3rd Street" },
-    { Name: "Property D", Street: "South Street" },
-    { Name: "Property E", Street: "3rd Street" },
-    { Name: "Property F", Street: "South Street" },
-    { Name: "Property G", Street: "3rd Street" },
-    { Name: "Property H", Street: "South Street" }
-  ];
-  console.log(req.query);
-  res.json(property);
+app.get("/PropertyList", (request, response) => {
+  console.log("endpoint hit!");
+  // response.json({ info: "Node.js, Express, and Postgres API" });
+pool.query('SELECT address,zip_code FROM property', (error, results) => {
+    if (error) {
+      throw error
+    }
+    // response.status(200).json(results.rows)
+    console.log(results)
+    // response.json({results})
+    response.status(200).json(results.rows)
+  })
 });
+
+
+//
+// app.get("/PropertyList", (req, res) => {
+//   property = [
+//     { Name: "Property A", Street: "3rd Street" },
+//     { Name: "Property B", Street: "South Street" },
+//     { Name: "Property C", Street: "3rd Street" },
+//     { Name: "Property D", Street: "South Street" },
+//     { Name: "Property E", Street: "3rd Street" },
+//     { Name: "Property F", Street: "South Street" },
+//     { Name: "Property G", Street: "3rd Street" },
+//     { Name: "Property H", Street: "South Street" }
+//   ];
+//   console.log(req.query);
+//   res.json(property);
+// });
 app.post("/Register", (request, response) => {
   console.log("Inside Register request");
   let User = new UserModel({
