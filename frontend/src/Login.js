@@ -36,7 +36,7 @@ class Login extends Component {
     if (this.validateEmail(data.email)) {
       // axios.defaults.withCredentials = true;
       console.log(data);
-      axios.post("http://localhost:3001/Login", data).then(response => {
+      axios.post("http://54.226.124.3:3001/Login", data).then(response => {
         console.log("Axios POST response:", response.status);
 
         if (response.status === 200) {
