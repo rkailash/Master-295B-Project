@@ -43,49 +43,57 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.post("/Login", (req, res) => {
   console.log("Inside Login request");
   console.log("Email body: ", req.body);
+  let user = {
+    email: "kailash@gmail.com",
+    password: "12345"
+  };
 
-  UserModel.findOne({ email: req.body.email })
+  if (req.body.email === user.email && req.body.password === user.password) {
+    res.sendStatus(200).end();
+  } else {
+    res.sendStatus(400).end();
+  }
+  // UserModel.findOne({ email: req.body.email })
 
-    .catch(err => {
-      res.code = "400";
-      res.value =
-        "The email and password you entered did not match our records. Please double-check and try again.";
-      console.log(res.value);
-      res.sendStatus(400).end();
-    })
+  //   .catch(err => {
+  //     res.code = "400";
+  //     res.value =
+  //       "The email and password you entered did not match our records. Please double-check and try again.";
+  //     console.log(res.value);
+  //     res.sendStatus(400).end();
+  //   })
 
-    .then(user => {
-      if (user && user.password == req.body.password) {
-        res.code = "200";
-        res.value = user;
-        res.cookie("user_cookie", "admin", {
-          maxAge: 900000,
-          httpOnly: false,
-          path: "/"
-        });
-        res.sendStatus(200).end();
-        console.log("Login succesful");
-      } else {
-        console.log("Passwords don't match");
-      }
-    });
+  //   .then(user => {
+  //     if (user && user.password == req.body.password) {
+  //       res.code = "200";
+  //       res.value = user;
+  //       res.cookie("user_cookie", "admin", {
+  //         maxAge: 900000,
+  //         httpOnly: false,
+  //         path: "/"
+  //       });
+  //       res.sendStatus(200).end();
+  //       console.log("Login succesful");
+  //     } else {
+  //       console.log("Passwords don't match");
+  //     }
+  //   });
 });
 // Query
 
 app.get("/PropertyList", (request, response) => {
   console.log("endpoint hit!");
   // response.json({ info: "Node.js, Express, and Postgres API" });
-pool.query('SELECT address,zip_code FROM property', (error, results) => {
+  pool.query("SELECT address,zip_code FROM property", (error, results) => {
     if (error) {
-      throw error
+      throw error;
     }
     // response.status(200).json(results.rows)
-    console.log(results)
+    console.log(results);
     // response.json({results})
-    response.status(200).json(results.rows)
-  })
+    response.status(200).json(results.rows);
+  });
 });
-
 
 //
 // app.get("/PropertyList", (req, res) => {
