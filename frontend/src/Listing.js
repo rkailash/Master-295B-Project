@@ -1,13 +1,11 @@
 import React, { Component } from "react";
-import ImageGallery from "./ImageGallery";
-import RatingDisplay from "./RatingDisplay";
+import ImageGallery from "./templates/ImageGallery";
+import RatingDisplay from "./templates/RatingDisplay";
 import { Link } from "react-router-dom";
 import Header from "./Header";
 import Search from "./Search";
-// import "./styles/listing.scss";
+import "./styles/listing.scss";
 import { images } from "./images";
-// import { listenerCount } from "cluster";
-import Property from "./Property";
 
 class Listing extends Component {
   constructor(props) {
@@ -15,62 +13,134 @@ class Listing extends Component {
     this.state = {};
   }
   render() {
-    // const { temp } = this.props.location.state.referrer.items;
-    // let array = [
-    //   { Name: "33 South", Street: "3rd Street" },
-    //   { Name: "101 South", Street: "South Street" }
+    const { items } = this.props.location.state.referrer;
+    // const items = [
+    //   {
+    //     propertyid: 1,
+    //     name: "Property 1",
+    //     total_size: 3000,
+    //     rental_space: 500,
+    //     price: 103475,
+    //     rental_month: 19156
+    //   },
+    //   {
+    //     propertyid: 2,
+    //     name: "Property 2",
+    //     total_size: 3000,
+    //     rental_space: 500,
+    //     price: 103475,
+    //     rental_month: 19156
+    //   },
+    //   {
+    //     propertyid: 3,
+    //     name: "Property 3",
+    //     total_size: 3000,
+    //     rental_space: 500,
+    //     price: 103475,
+    //     rental_month: 19156
+    //   },
+    //   {
+    //     propertyid: 4,
+    //     name: "Property 4",
+    //     total_size: 3000,
+    //     rental_space: 500,
+    //     price: 103475,
+    //     rental_month: 19156
+    //   },
+    //   {
+    //     propertyid: 5,
+    //     name: "Property 5",
+    //     total_size: 3000,
+    //     rental_space: 500,
+    //     price: 103475,
+    //     rental_month: 19156
+    //   },
+    //   {
+    //     propertyid: 6,
+    //     name: "Property 6",
+    //     total_size: 3000,
+    //     rental_space: 500,
+    //     price: 103475,
+    //     rental_month: 19156
+    //   },
+    //   {
+    //     propertyid: 7,
+    //     name: "Property 7",
+    //     total_size: 3000,
+    //     rental_space: 500,
+    //     price: 103475,
+    //     rental_month: 19156
+    //   }
     // ];
-    // const { temp } = this.props.location.state.referrer;
+    var rec_results = items.slice(130, 150);
+    var res = items.slice(1, 100);
+    const { userInfo } = this.props;
     return (
-      <ul>
-        {this.props.location.state.referrer.items.map(item => (
-          <li key={item}>
-            <div>
-              <Property Name={item.address}  Zip={item.zip_code} />
-            </div>
-          </li>
-        ))}
-      </ul>
-      // <div className="listing">
-      //   <div className="top-container">
-      //     <Header showLogin userInfo={this.props.userInfo} />
-      //     <Search query={this.props.query} />
-      //   </div>
-      //   <div className="list-container">
-      //     <h4>{`We found ${items.length} result${
-      //       items.length === 1 ? "" : "s"
-      //     } for you.`}</h4>
-      //     {items.map((item, key) => (
-      //       <div className="list-item" key={key}>
-      //         <ImageGallery
-      //           showThumbnail={false}
-      //           images={images[this.props.userInfo.userid]}
-      //         />
-      //         <div className="right-container">
-      //           <div className="top-container">
-      //             {/* <Link to={`/Property/${item.propertyid}`}>
-      //               <h4>{item.name}</h4>
-      //             </Link> */}
-      //             <div className="property-info">
-      //               <span>{`${
-      //                 item.bedrooms === 0
-      //                   ? "Studio"
-      //                   : `${item.bedrooms} BR Apartment`
-      //               }`}</span>
-      //               <span>{`${item.bathrooms} Bath`}</span>
-      //               <span>{`${item.area} sq ft`}</span>
-      //               <span>{`Sleeps ${item.sleeps}`}</span>
-      //             </div>
-      //           </div>
-      //           <div className="bottom-strip">
-      //             <p>{`$${item.price} per night`}</p>
-      //             <RatingDisplay rating={item.rating} />
-      //           </div>
-      //         </div>
-      //       </div>
-      //     ))}
-      //   </div>
-      // </div>
+      <div className="listing">
+        <Header title={"AFFHomes"} userInfo={userInfo} />
+        <div className="left-column">
+          <div className="top-bar">
+            <h4>{`Found ${res.length} result${
+              res.length === 1 ? "" : "s"
+            }`}</h4>
+          </div>
+          <div className="scrolling-container">
+            {res.map((item, key) => (
+              <div className="list-item" key={key}>
+                <ImageGallery showThumbnail={false} images={images[0]} />
+                <div className="right-container">
+                  <div className="top-container">
+                    <Link to={`/Property/${item.propertyid}`}>
+                      <h4>{item.name}</h4>
+                    </Link>
+                    <div className="property-info">
+                      <span>{`${item.total_size} sq ft`}</span>
+                      <span>{`Rental Space${item.rental_space} sq ft`}</span>
+                      <span>{`Price ${item.price} $`}</span>
+                      <span>{`Monthly rental ${item.rental_month}`}</span>
+                      <span>{`ZipCode ${item.zip_code}`}</span>
+                    </div>
+                  </div>
+                  <div className="bottom-strip">
+                    <p>{`$${item.price}`}</p>
+                    {/* <RatingDisplay rating={item.rating} /> */}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="right-column">
+          <h4>{`Recommended ${rec_results.length} result${
+            items.length === 1 ? "" : "s"
+          } for you.`}</h4>
+          <div className="scrolling-container">
+            {rec_results.map((item, key) => (
+              <div className="list-item" key={key}>
+                <ImageGallery showThumbnail={false} images={images[0]} />
+                <div className="right-container">
+                  <div className="top-container">
+                    <Link to={`/Property/${item.propertyid}`}>
+                      <h4>{item.name}</h4>
+                    </Link>
+                    <div className="property-info">
+                      <span>{`${item.total_size} sq ft`}</span>
+                      <span>{`Rental Space${item.rental_space} sq ft`}</span>
+                      <span>{`Price ${item.price} $`}</span>
+                      <span>{`Monthly rental ${item.rental_month}`}</span>
+                      <span>{`ZipCode ${item.zip_code}`}</span>
+                    </div>
+                  </div>
+                  <div className="bottom-strip">
+                    <p>{`$${item.price}`}</p>
+                    {/* <RatingDisplay rating={item.rating} /> */}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     );
   }
 }

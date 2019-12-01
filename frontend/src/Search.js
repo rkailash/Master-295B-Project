@@ -25,12 +25,10 @@ class Search extends Component {
       endDate: null,
       guests: {
         adults: 1,
-        children: 0,
         pets: false
       },
-      location: null,
-      location_name: null,
-      showError: false
+      address: "",
+      zipcode: ""
     };
   }
   //   componentDidMount() {
@@ -65,29 +63,28 @@ class Search extends Component {
     };
     this.setState({ guests });
   };
-  updateChildrenGuests = i => {
-    const guests = {
-      ...this.state.guests,
-      children: i
-    };
-    this.setState({ guests });
-  };
+  // updateChildrenGuests = i => {
+  //   const guests = {
+  //     ...this.state.guests,
+  //     children: i
+  //   };
+  //   this.setState({ guests });
+  // };
   toggleDropdown = () =>
     this.setState({ dropdownIsOpen: !this.state.dropdownIsOpen });
   onClickSearch = () => {
-    // const { location, startDate, endDate, guests } = this.state;
-    const { location } = this.state;
+    const { location, startDate, endDate, guests } = this.state;
     // // if (!startDate || !endDate) {
     // //   this.setState({ showError: true });
     // // } else {
-    // this.props.onClick({
-    //   location,
-    //   startDate,
-    //   endDate,
-    //   guests
-    // });
+    this.props.onClick({
+      location,
+      startDate,
+      endDate,
+      guests
+    });
     console.log(this.props);
-    this.props.onClick({ location });
+    // this.props.onClick({ location });
   };
   render() {
     const {
@@ -151,17 +148,17 @@ class Search extends Component {
             type="button"
             className="guest-selector"
             onClick={this.toggleDropdown}
-          >{`${guests.adults + guests.children} Tenant${
-            guests.adults + guests.children > 1 ? "s" : ""
-          } ${guests.pets ? ", Pets" : ""}`}</button>
+          >{`${guests.adults} Tenant${guests.adults > 1 ? "s" : ""} ${
+            guests.pets ? ", Pets" : ""
+          }`}</button>
           <Dropdown
             isOpen={dropdownIsOpen}
             onClick={() => this.toggleDropdown()}
           >
             <p>Adults:</p>
             <Counter min={1} onIncrement={i => this.updateAdultGuests(i)} />
-            <p>Children:</p>
-            <Counter min={0} onIncrement={i => this.updateChildrenGuests(i)} />
+            {/* <p>Children:</p>
+            <Counter min={0} onIncrement={i => this.updateChildrenGuests(i)} /> */}
             <p>Pets:</p>
             <RadioGroup
               options={[

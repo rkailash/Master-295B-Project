@@ -39,6 +39,15 @@
     &.error {
       outline: 2px solid red;
     }
+
+    // .zipcode {
+    //   flex: 1 1 250px;
+    //   padding-left: 8px;
+    //   height: 46px;
+    //   color: $black;
+    //   font-size: 19px;
+    //   width: 10px;
+    // }
     ::placeholder {
       /* Chrome, Firefox, Opera, Safari 10.1+ */
       color: #484848;

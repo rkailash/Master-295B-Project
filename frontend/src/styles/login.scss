@@ -1,5 +1,14 @@
 @import "constants.scss";
 
+.error-message {
+  background-color: #ff7272;
+  color: white;
+  padding: 1em;
+}
+.error .popover {
+  color: red;
+  font-family: $font;
+}
 .login,
 .register {
   border-radius: 4px;
@@ -9,10 +18,14 @@
   background: $offwhite;
   font-family: $font;
   color: $black;
+  background: url(/bg.jpg) no-repeat;
+  background-position: center;
+  background-size: cover;
   h2 {
     letter-spacing: 2px;
     padding-top: 56px;
   }
+
   p {
     font-size: 18px;
     line-height: 24px;
@@ -39,12 +52,23 @@
       width: 300px;
       height: 48px;
     }
+    select {
+      width: 325px;
+      height: 48px;
+    }
     input {
       display: block;
       margin: auto;
       margin-bottom: 16px;
       padding: 0 12px;
     }
+    select {
+      display: block;
+      margin: auto;
+      margin-bottom: 16px;
+      padding: 0 12px;
+    }
+
     small {
       display: block;
       margin-top: 8px;
@@ -52,7 +76,7 @@
     }
     .btn-login,
     .btn-register {
-      background: #ff8a00;
+      background: rgba(0, 81, 255, 0.918);
       position: relative;
       color: #fff;
       margin-bottom: 16px;

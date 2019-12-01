@@ -2,27 +2,22 @@ const express = require("express");
 const app = express();
 const cookieParser = require("cookie-parser");
 app.use(cookieParser());
-const Pool = require("pg").Pool;
-const pool = new Pool({
-  user: "",
-  host: "localhost",
-  database: "mastertnf",
-  password: "",
-  port: 5432
+const pg = require("pg");
+const conString =
+  "postgres://dsvweyaf:0zgyKRYk5l5p5a3HeiTM-R7ovYNrWz2r@salt.db.elephantsql.com:5432/dsvweyaf";
+
+const con = new pg.Client(conString);
+
+con.connect(err => {
+  if (err) {
+    return console.error("could not connect to db", err);
+  } else {
+    console.log("Sucessfully connected to db");
+  }
 });
 
-const mongoose = require("mongoose");
-const mongoDB = "mongodb://kailashr:passw0rd1@ds237855.mlab.com:37855/homeaway";
-mongoose.connect(mongoDB);
-mongoose.Promise = global.Promise;
-let db = mongoose.connection;
-//Bind connection to error event to get notified for connection errors
-db.on("error", console.error.bind(console, "MongoDB connection error:"));
-
-const UserModel = require("./User");
-
 app.use(function(req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "http://54.226.124.3:3000");
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
     "Access-Control-Allow-Methods",
@@ -40,92 +35,96 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.get("/", (req, res) => {
+  con.query("SELECT * FROM type_user", (err, results) => {
+    if (err) {
+      throw err;
+    }
+    res.status(200).json(results.rows);
+  });
+});
 app.post("/Login", (req, res) => {
   console.log("Inside Login request");
   console.log("Email body: ", req.body);
+  let email = req.body.email;
+  let pwd = req.body.password;
   let user = {
     email: "kailash@gmail.com",
     password: "12345"
   };
 
-  if (req.body.email === user.email && req.body.password === user.password) {
-    res.sendStatus(200).end();
-  } else {
-    res.sendStatus(400).end();
-  }
-  // UserModel.findOne({ email: req.body.email })
+  con.query(
+    "SELECT * FROM users WHERE email = $1 AND password= $2",
+    [email, pwd],
+    (err, result) => {
+      if (err) {
+        res.status(404).send("Password does not match");
+      }
 
-  //   .catch(err => {
-  //     res.code = "400";
-  //     res.value =
-  //       "The email and password you entered did not match our records. Please double-check and try again.";
-  //     console.log(res.value);
-  //     res.sendStatus(400).end();
-  //   })
-
-  //   .then(user => {
-  //     if (user && user.password == req.body.password) {
-  //       res.code = "200";
-  //       res.value = user;
-  //       res.cookie("user_cookie", "admin", {
-  //         maxAge: 900000,
-  //         httpOnly: false,
-  //         path: "/"
-  //       });
-  //       res.sendStatus(200).end();
-  //       console.log("Login succesful");
-  //     } else {
-  //       console.log("Passwords don't match");
-  //     }
-  //   });
-});
-// Query
-
-app.get("/PropertyList", (request, response) => {
-  console.log("endpoint hit!");
-  // response.json({ info: "Node.js, Express, and Postgres API" });
-  pool.query("SELECT address,zip_code FROM property", (error, results) => {
-    if (error) {
-      throw error;
+      console.log("Login result", result.rows[0]);
+      res.status(200).send(result.rows[0]);
     }
-    // response.status(200).json(results.rows)
-    console.log(results);
-    // response.json({results})
-    response.status(200).json(results.rows);
+  );
+});
+
+app.post("/Register", (req, res) => {
+  console.log("Inside Register request");
+  let email = req.body.email;
+  let password = req.body.password;
+  let type = req.body.type;
+  let first_name = req.body.firstName;
+  let last_name = req.body.lastName;
+  con.query("SELECT * FROM users WHERE email = $1", [email], (err, result) => {
+    if (err) {
+      throw err;
+    }
+    console.log(result);
+    if (result.rows.length === 0) {
+      let sql =
+        "INSERT INTO users (email,password,firstname,lastname,type) VALUES ($1,$2,$3,$4,$5)";
+      con.query(
+        sql,
+        [email, password, first_name, last_name, type],
+        (err, results) => {
+          if (err) {
+            throw err;
+          } else {
+            console.log(results);
+            res.status(201).send("User added");
+          }
+        }
+      );
+    } else {
+      console.log("Email already exists!");
+      res.status(400).send("Email already exists");
+    }
   });
 });
 
-//
-// app.get("/PropertyList", (req, res) => {
-//   property = [
-//     { Name: "Property A", Street: "3rd Street" },
-//     { Name: "Property B", Street: "South Street" },
-//     { Name: "Property C", Street: "3rd Street" },
-//     { Name: "Property D", Street: "South Street" },
-//     { Name: "Property E", Street: "3rd Street" },
-//     { Name: "Property F", Street: "South Street" },
-//     { Name: "Property G", Street: "3rd Street" },
-//     { Name: "Property H", Street: "South Street" }
-//   ];
-//   console.log(req.query);
-//   res.json(property);
-// });
-app.post("/Register", (request, response) => {
-  console.log("Inside Register request");
-  let User = new UserModel({
-    email: request.body.email,
-    password: request.body.password
-  });
+app.get("/PropertyList", (req, res) => {
+  console.log("endpoint hit!");
+  console.log("Params", req.query);
+  let zip = req.query.zipcode;
+  con.query(
+    "SELECT * FROM property_details where zip_code = $1",
+    [zip],
+    (err, results) => {
+      if (err) console.log("Error!", err);
 
-  User.save()
-    .then(user => {
-      console.log("User created : ", user);
-      response.sendStatus(200).end();
-    })
-    .catch(err => {
-      console.log("Error Creating User", err);
-      response.sendStatus(400).end();
-    });
+      console.log("Search results:", results);
+      res.status(200).json(results.rows);
+    }
+  );
+  // // response.json({ info: "Node.js, Express, and Postgres API" });
+  // con.query("SELECT address,zip_code FROM property", (error, results) => {
+  //   if (error) {
+  //     throw error;
+  //   }
+  //   // response.status(200).json(results.rows)
+  //   console.log(results);
+  //   // response.json({results})
+  //   response.status(200).json(results.rows);
+  // });
 });
 
 //start your server on port 3001

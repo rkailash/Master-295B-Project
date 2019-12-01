@@ -1,98 +1,27 @@
 @import "constants.scss";
 
 .header {
+  height: 56px;
   display: flex;
-  position: relative;
-  width: 100%;
-  background: transparent;
-  z-index: 99999;
-  height: $header-height;
-  font-family: $font;
-  background: #fff;
-  border-bottom: 1px solid $gray;
-  padding: 0 2.5vw;
-  &.gradient {
-    background: none;
-    border: 0;
-    background-image: linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0.45) 5%,
-      rgba(0, 0, 0, 0.4) 25%,
-      rgba(0, 0, 0, 0.001)
-    );
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  flex-wrap: nowrap;
+  align-items: center;
+  background: #fafafa;
+  padding: 0 32px;
+  box-shadow: 0 1px 5px rgba(12, 13, 14, 0.3);
+  h2 {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
   }
-  .logo {
-    flex: none;
-    width: auto;
-    display: flex;
-    justify-content: center;
-    padding: 0 16px;
-  }
-  .right-container {
+  .k-dropdown {
     flex: none;
     margin-left: auto;
-    display: flex;
-    justify-content: center;
   }
-  .logo-image {
-    margin: 0 22px;
-  }
-  .trips {
-    margin: auto 32px;
-    color: white;
-  }
-  .lyp {
-    margin: auto 0;
-    button {
-      color: $blue;
-      background: white;
-      border: 1px solid $blue;
-      padding: 0 32px;
-      height: 48px;
-      line-height: 40px;
-      border-radius: 40px;
-      margin-left: 22px;
-    }
-  }
-  .header-menu {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    color: $black;
-    .dropdown-item {
-      display: flex;
-      align-items: center;
-      svg {
-        margin-right: 8px;
-      }
-    }
-    button,
-    button:focus {
-      color: inherit;
-    }
-    .btn-secondary:focus,
-    .btn-secondary.focus {
-      box-shadow: none;
-    }
-    &.show {
-      button {
-        background: transparent;
-        border: 0;
-      }
-      .dropdown-toggle:focus {
-        box-shadow: none;
-      }
-    }
-    button {
-      background: transparent;
-      border: 0;
-    }
-  }
-  &.gradient .header-menu {
-    color: #fff;
-    button,
-    button:focus {
-      color: inherit;
-    }
+  .dropdown-menu {
+    transform: translate3d(-60px, 38px, 0px) !important;
   }
 }

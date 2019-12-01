@@ -16,44 +16,48 @@ class Home extends Component {
       items: []
     };
   }
-  onClickSearch = string => {
-    console.log(string);
+  onClickSearch = query => {
+    let locArr = [];
+    locArr = query.location.split(",");
+    let address = locArr[0];
+    let zipcode = locArr[1].match();
+    console.log("Query:", query);
+    let data = { address: locArr[0], zipcode: locArr[1] };
+    console.log("Data:", data);
+    const startDate = moment(query.startDate).format("YYYY-MM-DD");
+    const endDate = moment(query.startDate).format("YYYY-MM-DD");
     axios.defaults.withCredentials = true;
     axios
       .get(`http://localhost:3001/PropertyList`, {
-        params: { string }
+        params: {
+          address: data.address,
+          zipcode: data.zipcode
+        }
       })
       .then(response => {
         console.log("Axios POST response:", response.status);
         if (response.status === 200) {
-          console.log("response:", response.data);
           this.setState({ goToListing: true, items: response.data });
-          // this.setState({ goToListing: true, items: response.data });
-          console.log(response.data);
         } else {
           console.log(response);
         }
       });
-    // this.props.saveSearchQuery(query);
-    // const startDate = moment(query.startDate).format("YYYY-MM-DD");
-    // const endDate = moment(query.startDate).format("YYYY-MM-DD");
-    // axios.defaults.withCredentials = true;
     // axios
     //   .get(`http://localhost:3001/PropertyList`, {
-    //     params: {
-    //       location: "san jose",
-    //       startDate,
-    //       endDate
-    //     }
+    //     params: { string }
     //   })
     //   .then(response => {
     //     console.log("Axios POST response:", response.status);
     //     if (response.status === 200) {
+    //       console.log("response:", response.data);
     //       this.setState({ goToListing: true, items: response.data });
+    //       // this.setState({ goToListing: true, items: response.data });
+    //       console.log(response.data);
     //     } else {
     //       console.log(response);
     //     }
     //   });
+    // this.props.saveSearchQuery(query);
   };
   render() {
     // const { items, query } = this.state;
@@ -89,7 +93,7 @@ class Home extends Component {
     return (
       <div className="home">
         <div className="hero-container">
-          <Header design="gradient" showLogin userInfo={this.props.userInfo} />
+          <Header title={"AFFHomes"} userInfo={this.props.userInfo} />
           <h1>
             <br />
           </h1>
